@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Instructions</title>
+    <link rel="stylesheet" href = "{% static 'game.css' %}">
+</head>
+<body>
+    <div class = "box">
+        <h1>Instructions</h1>
+        <ol>
+            <li>You have 6 tries to guess a random 5 letter word</li>
+            <li>You can only use existing words. If the word does not exist, you will be prompted to enter the word again without using a try</li>
+            <li>Guessed letters will be colored based on location in the mystery word.
+                <ul>
+                    <li>Gray means the letter is not in the word. Excess duplicates of a letter will also be marked as gray if they are in the wrong position.</li>
+                    <li>Orange means the letter is in the wrong position.</li>
+                    <li>Green denotes that the letter is in the right position</li>
+                </ul>
+            </li>
+        </ol>
+        <div class = "middle">
+            <form action = "{% url 'game' %}" method = "POST">
+                {% csrf_token %}
+                <input type = "hidden" name = "word" value = "{{word}}">
+                <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
+                <input type = "hidden" name = "addletter" value = "{{letter}}">
+                <input type = "hidden" name = "tries" value = "{{tries}}">
+                <input type = "hidden" name = "back" value = "{{back}}">
+                <input type = "hidden" name = "submit" value = "{{submit}}">
+                <button class = "menu_button_bott_left" type = "submit"><h1>Play Game</h1></button>
+            </form>
+            <form action = "{% url 'home' %}" method = "GET">
+                {% csrf_token %}<button class = "menu_button_bott_right" type = "submit"><h1>Back to Menu</h1></button>
+            </form>   
+        </div>
+    </div>
+
+</body>
+</html>

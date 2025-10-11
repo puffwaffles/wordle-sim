@@ -1,0 +1,167 @@
+.gamebox {
+    width: 80%;
+    float: right;
+}
+
+.box {
+    display: block;
+    border-radius: 15px;
+    border: 2px solid black;
+    margin: auto;
+    height: 50%;
+    width: 80%;
+    overflow: hidden;
+    padding: 15px; 
+}
+
+.guessbox {
+    display: block;
+    border-radius: 15px;
+    margin: auto;
+    height: 50%;
+    width: 50%;
+    overflow: hidden;
+    padding: 15px;
+}
+
+.menu {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+    left: 0;
+	width: 20%;
+	position: fixed;
+    color: white;
+}
+
+.bar:hover {
+	background-color: #00cc74;
+    cursor: pointer;
+}
+
+button.bar {
+    display: block;
+	text-decoration: none;
+    color: white;
+	text-align: center;
+	font-size: 10pt;
+    background-color: gray;
+    width: 80%;
+    padding: 30px;
+    border-radius: 15px; 
+    margin-top: 10px;
+}
+
+.middle {
+    margin: auto;
+    text-align: center;
+}
+
+.gamebox {
+    display: inline-block;
+}
+
+.botbar {
+    position: fixed;
+    bottom: 0;
+    height: 35%;
+    width: 100%;
+}
+
+.letterbar {
+    width: 90%;
+    vertical-align: middle; 
+}
+
+.letterbox {
+    margin: auto;
+    text-align: center;
+    display: flex;
+    height: 30%;
+    width: 100%;
+    vertical-align: middle;
+    margin: auto;
+}
+
+.currletterbox {
+    margin: auto;
+    text-align: center;
+    display: flex;
+    height: 10%;
+    width: 100%;
+}
+
+.greenbox:hover:enabled, .orangebox:hover:enabled, .graybox:hover:enabled, .whitebox:hover:enabled {
+    background-color: aqua;
+    cursor: pointer;
+}
+
+.greenbox, .orangebox, .graybox, .whitebox {
+    display: inline-block;
+	list-style-type: none;
+	padding: 0;
+    border-radius: 15px;
+    border: 2px solid black;
+    margin: 5px;
+    height: 50px;
+    width: 50px;
+    color: black;
+}
+
+.greenbox {
+    background-color: #00cc74;
+}
+
+.orangebox {
+    background-color: orange;
+}
+
+.graybox {
+    background-color: gray;
+    color: white;
+}
+
+.whitebox {
+    background-color: white;
+}
+
+.box {
+    display: block;
+    border-radius: 15px;
+    border-color: black;
+    border: 10px;
+    margin: auto;
+    height: 50%;
+    width: 50%;
+    overflow: hidden;
+    padding: 15px;
+}
+
+.menu_button, .menu_button_bott_left, .menu_button_bott_right {
+    color: "white";
+    border-radius: 15px; 
+    text-align: center;
+    background-color: gray; 
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.menu_button:hover, .menu_button_bott_left:hover, .menu_button_bott_right:hover {
+    background-color: #00cc74;
+    cursor: pointer;
+}
+
+.menu_button_bott_left, .menu_button_bott_right {
+    bottom: 0;
+}
+
+.menu_button_bott_left {
+    float: left;
+}
+
+.menu_button_bott_right {
+    float: right;
+}
+
+
+

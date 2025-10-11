@@ -1,0 +1,34 @@
+{
+    "Row1": {
+        "Q": "white", 
+        "W": "white", 
+        "E": "white", 
+        "R": "white", 
+        "T": "white", 
+        "Y": "white", 
+        "U": "white", 
+        "I": "white", 
+        "O": "white", 
+        "P": "white"
+    },
+    "Row2": {
+        "A": "white", 
+        "S": "white", 
+        "D": "white", 
+        "F": "white", 
+        "G": "white", 
+        "H": "white", 
+        "J": "white", 
+        "K": "white", 
+        "L": "white"
+    },
+    "Row3": {
+        "Z": "white", 
+        "X": "white", 
+        "C": "white", 
+        "V": "white", 
+        "B": "white", 
+        "N": "white", 
+        "M": "white"
+    }
+}
