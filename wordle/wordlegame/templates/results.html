@@ -9,25 +9,40 @@
     <div class = "box">
         <div class = "middle">
             {% if win == "win" %}
-            <h1>You win!</h1>
+                <h1>You win!</h1>
             {% else %}
-            <h1>You lose! The word was {{oldword}}</h1>
+                <h1>You lose! The word was {{oldword}}</h1>
             {% endif %}
-            <h1>Would you like to play another game?</h1>
-            <form action = "{% url 'game' %}" method = "POST">
-                {% csrf_token %}
-                <input type = "hidden" name = "word" value = "{{word}}">
-                <input type = "hidden" name = "guessedword" value = "">
-                <input type = "hidden" name = "tries" value = "5">
-                <button class = "menu_button_bott_left" type = "submit"><h1>Yes</h1></button>
-            </form>
+            {% if version == "solo" %}
+                <h1>Would you like to play another game?</h1>
+                <form action = "{% url 'game' %}" method = "POST">
+                    {% csrf_token %}
+                    <input type = "hidden" name = "word" value = "{{word}}">
+                    <input type = "hidden" name = "guessedword" value = "">
+                    <input type = "hidden" name = "tries" value = "5">
+                    <button class = "menu_button_bott_left" type = "submit"><h1>Yes</h1></button>
+                </form>
+            {% elif version == "agent only" %}
+                <h1>Would you like the agent to play another game?</h1>
+                <form action = "{% url 'agentgame' %}" method = "POST">
+                    {% csrf_token %}
+                    <input type = "hidden" name = "word" value = "{{word}}">
+                    <input type = "hidden" name = "guessedword" value = "">
+                    <input type = "hidden" name = "tries" value = "5">
+                    <button class = "menu_button_bott_left" type = "submit"><h1>Yes</h1></button>
+                </form>
+            {% endif %}
             <form action = "{% url 'home' %}" method = "GET">
                 {% csrf_token %}<button class = "menu_button_bott_right" type = "submit"><h1>No</h1></button>
             </form>
         </div>
     </div>
     <div class = "guessbox">
-        <h1>Your guesses: </h1>
+        {% if version == "solo" %}
+            <h1>Your guesses: </h1>
+        {% elif version == "agent only" %}
+            <h1>The Agent's guesses: </h1>
+        {% endif %}
         {% for guessnum, guess in oldguesses.items %}
             <div class = "letterbox">
                 {% for guesslet in guess %}

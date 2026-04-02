@@ -8,6 +8,12 @@ def getjsonpath(file):
     path += file + ".json"
     return path
 
+def getcsvpath(file):
+    filedirectory = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(filedirectory, "csvs/")
+    path += file + ".csv"
+    return path
+
 #Gets initialized letter list
 def getnewletter():
     letfile = getjsonpath("letters")
@@ -23,6 +29,7 @@ def getletter(letter):
     row = ""
     letfile = getjsonpath("letters")
     letdict = {}
+    letter = letter.upper()
     
     #Grab dictionary of words from json file
     with open(letfile, "r") as file:
@@ -61,21 +68,12 @@ def pickword():
     #Grab dictionary of words from json file
     with open(wordfile, "r") as file:
         worddict = json.load(file)
-    
-    rand = random.randint(1, 101)
 
     #Pick a random word from common word list
-    if (rand < 100):
-        commonlist = [key for key in worddict.keys() if worddict[key] == 1]
-        size = len(commonlist)
-        rand2 = random.randint(0, size)
-        word = commonlist[rand2]
-    #Pick a random word from uncommon word list
-    else:
-        uncommonlist = [key for key in worddict.keys() if worddict[key] == 0]
-        size = len(uncommonlist)
-        rand2 = random.randint(0, size)
-        word = uncommonlist[rand2]
+    commonlist = [key for key in worddict.keys() if worddict[key] == 1]
+    size = len(commonlist)
+    rand2 = random.randint(0, size)
+    word = commonlist[rand2]
     
     return word
 

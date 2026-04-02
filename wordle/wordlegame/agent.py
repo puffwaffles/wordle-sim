@@ -3,7 +3,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 np.bool8 = np.bool_
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 #We only need to initialize the agent to be able to pick actions
 
@@ -18,7 +17,6 @@ class Cnnetwork(nn.Module):
     
     self.layer1 = nn.Linear(64 * self.oshape[2], hiddendim)
     self.layer2 = nn.Linear(hiddendim, self.actionsize)
-    self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
   #States are originally numpy arrays of shape (3, 6, 5, 26) where 3 are the input channels 0-2 denoting green, orange, gray for letter status
   #6 is for the attempt number, 5 is for each letter, and 26 designates the one hot encoding for each letter
@@ -26,7 +24,7 @@ class Cnnetwork(nn.Module):
   def forward(self, x):
     #Convert state into tensor
     if not isinstance(x, torch.Tensor):
-      x = torch.tensor(x, device = self.device, dtype = torch.float32)
+      x = torch.tensor(x, dtype = torch.float32)
     #Insert dimension of size 1 at dimension 0 if batch is 1 (3, 6, 5, 26) -> (1, 3, 6, 5, 26)
     if (x.dim() == 4): 
       x = x.unsqueeze(0)
@@ -36,23 +34,34 @@ class Cnnetwork(nn.Module):
     x = F.relu(self.cnn1(x)) #Now x is shape (batchsize, 32, 5, 1)
     x = F.relu(self.cnn2(x)) #Now x is shape (batchsize, 64, 5, 1)
 
+    #Flatten x
+    x = x.view(x.size(0), -1) #Now x is shape (batchsize, 64 * 5 * 1)
+    x = self.layer1(x) #Now x is shape (batchsize, hidden dim)
+    x = self.layer2(x) #Now x is shape (hidden dim, actionsize)
+
+    return x
+
 #DDQN agent for site
 class DDQNagent():
     def __init__(self, statesize, actionsize):
+        self.statesize = statesize
+        self.actionsize = actionsize
         #Qnetwork and targetnetwork
-        self.qnetwork = Cnnetwork(self.statesize, self.actionsize, 512).to(device)
+        self.qnetwork = Cnnetwork(self.statesize, self.actionsize, 512)
 
     #Load existing agent qnetwork
     def loadqnetwork(self, loadqnetwork):
-        self.qnetwork.load_state_dict(torch.load(loadqnetwork))
+        self.qnetwork.load_state_dict(torch.load(loadqnetwork, weights_only = False, map_location=torch.device('cpu')))
 
     #Picks greedy action
     def greedy(self, state):
         #Grab the actual state from the state dictionary
         actualstate = state['state']
+
         #Acquire qvalues
         with torch.no_grad():
-        qvalues = self.qnetwork(actualstate).cpu().detach().data.numpy().squeeze()
+          #Agent is using cpu here
+          qvalues = self.qnetwork(actualstate).detach().data.numpy().squeeze()
         
         #Mask actions that are illogical
         mask = np.squeeze(state['mask'], axis = -1)

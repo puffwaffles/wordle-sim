@@ -17,6 +17,12 @@
             <input type = "hidden" name = "tries" value = "6">
             <button class = "menu_button" type = "submit"><h1>Play Game</h1></button>
         </form>
+        <form action = "{% url 'agentgame' %}" method = "POST">
+            {% csrf_token %}
+            <input type = "hidden" name = "word" value = "{{word}}">
+            <input type = "hidden" name = "tries" value = "6">
+            <button class = "menu_button" type = "submit"><h1>Let Agent Play Game</h1></button>
+        </form>
     </div>
 </body>
 </html>

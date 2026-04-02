@@ -1,0 +1,74 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wordle Game</title>
+    <link rel="stylesheet" href = "{% static 'game.css' %}">
+</head>
+
+<body>
+    <ul class = "menu">
+        <form action = "{% url 'home' %}" method = "Get">
+            {% csrf_token %}<button class = "bar" type = "submit"><h4>Back To Home Menu</h4></button>
+        </form>
+        <form action = "{% url 'instructions' %}" method = "POST">
+            <input type = "hidden" name = "word" value = "{{word}}">
+            <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
+            <input type = "hidden" name = "addletter" value = "{{letter}}">
+            <input type = "hidden" name = "tries" value = "{{tries}}">
+            <input type = "hidden" name = "back" value = "{{back}}">
+            <input type = "hidden" name = "submit" value = "{{submit}}">
+            {% csrf_token %}<button class = "bar" type = "submit"><h4>Instructions</h4></button>
+        </form>
+    </ul>
+    <div class = "gamebox">
+        <div class = "middle">
+            {% for guessnum, guess in guesses.items %}
+                <div class = "letterbox">
+                    {% for guesslet in guess %}
+                        {% if guesslet.1 == "green" %}
+                            <button class = "greenbox" disabled>{{guesslet.0}}</button>
+                        {% elif guesslet.1 == "orange" %}
+                            <button class = "orangebox" disabled>{{guesslet.0}}</button>
+                        {% elif guesslet.1 == "gray" %}
+                            <button class = "graybox" disabled>{{guesslet.0}}</button>
+                        {% else %}
+                            <button class = "whitebox" disabled>{{guesslet.0}}</button>
+                        {% endif %}
+                    {% endfor%}
+                </div>
+            {% endfor%}
+            <div class = "currletterbox">
+                {% for guess in currguess %}
+                    {% if guess.1 == "green" %}
+                        <button class = "greenbox"  disabled>{{guess.0}}</button>
+                    {% elif guess.1 == "orange" %}
+                        <button class = "orangebox"  disabled>{{guess.0}}</button>
+                    {% elif guess.1 == "gray" %}
+                        <button class = "graybox"  disabled>{{guess.0}}</button>
+                    {% else %}
+                        <button class = "whitebox"  disabled>{{guess.0}}</button>
+                    {% endif %}
+                {% endfor%}
+            </div>
+            {% if error == "True" %}
+                <h1>{{guessedword}} is not a valid word</h1>
+            {% endif %}
+            <div class = "botbar">
+                <div class = "letterbar">    
+                    <div class = "letterbox">
+                        <form action = "{% url 'agentgame' %}" method = "POST">
+                            {% csrf_token %}
+                            <input type = "hidden" name = "word" value = "{{word}}">
+                            <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
+                            <input type = "hidden" name = "tries" value = "{{tries}}">
+                            <input type = "hidden" name = "submit" value = "True">
+                            <button type= "submit" value="Enter" class = "whitebox">Enter</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
