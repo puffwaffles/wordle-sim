@@ -51,6 +51,13 @@
                     {% endif %}
                 {% endfor%}
             </div>
+            {% for j in remaining %}
+                <div class = "currletterbox">
+                    {% for i in j %}
+                        <button class = "whitebox"  disabled>{{guess.0}}</button>
+                    {% endfor%}
+                </div>
+            {% endfor%}
             {% if error == "True" %}
                 <h1>{{guessedword}} is not a valid word</h1>
             {% endif %}
@@ -63,7 +70,7 @@
                             <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
                             <input type = "hidden" name = "tries" value = "{{tries}}">
                             <input type = "hidden" name = "submit" value = "True">
-                            <button type= "submit" value="Enter" class = "whitebox">Enter</button>
+                            <button type= "submit" value="Enter" class = "whiteboxbtn">Enter</button>
                         </form>
                     </div>
                 </div>

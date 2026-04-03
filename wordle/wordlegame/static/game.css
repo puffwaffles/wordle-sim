@@ -14,13 +14,21 @@
     padding: 15px; 
 }
 
+.guessboxsplit {
+    text-align: center;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    width: 100%;
+    height: 100%;
+}
+
 .guessbox {
     display: block;
     border-radius: 15px;
-    margin: auto;
-    height: 50%;
+    margin: 5px;
+    height: 100%;
     width: 50%;
-    overflow: hidden;
+    overflow: auto;
     padding: 15px;
 }
 
@@ -31,12 +39,12 @@
     left: 0;
 	width: 20%;
 	position: fixed;
-    color: white;
 }
 
 .bar:hover {
-	background-color: #00cc74;
+	background-color: rgb(91, 91, 91);
     cursor: pointer;
+    transform: translateY(-3px);
 }
 
 button.bar {
@@ -50,11 +58,34 @@ button.bar {
     padding: 30px;
     border-radius: 15px; 
     margin-top: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 10px 0 0 rgb(31, 31, 31);
+}
+
+button.bar:active {
+    transform: translateY(10px);
+    box-shadow: none;
 }
 
 .middle {
     margin: auto;
     text-align: center;
+}
+
+.guesses {
+    margin: auto;
+    text-align: center;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    width: 100%;
+}
+
+.splitbox {
+    float: left;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
 }
 
 .gamebox {
@@ -69,34 +100,45 @@ button.bar {
 }
 
 .letterbar {
-    width: 90%;
-    vertical-align: middle; 
+    width: 80%;
 }
 
 .letterbox {
-    margin: auto;
     text-align: center;
     display: flex;
     height: 30%;
     width: 100%;
-    vertical-align: middle;
-    margin: auto;
+    align-items: center;  
+}
+
+.leftletterbox {
+    display: flex;
+    width: 50%;
+    justify-content: flex-start;
+    margin-left: 0;
+}
+
+.letterrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .currletterbox {
     margin: auto;
     text-align: center;
     display: flex;
-    height: 10%;
+    height: 30%;
     width: 100%;
 }
 
-.greenbox:hover:enabled, .orangebox:hover:enabled, .graybox:hover:enabled, .whitebox:hover:enabled {
-    background-color: aqua;
+.greenboxbtn:hover, .orangeboxbtn:hover, .grayboxbtn:hover, .whiteboxbtn:hover {
     cursor: pointer;
+    transform: translateY(-3px);
 }
 
-.greenbox, .orangebox, .graybox, .whitebox {
+.greenbox, .orangebox, .graybox, .whitebox, .greenboxbtn, .orangeboxbtn, .grayboxbtn, .whiteboxbtn  {
     display: inline-block;
 	list-style-type: none;
 	padding: 0;
@@ -125,6 +167,43 @@ button.bar {
     background-color: white;
 }
 
+.greenboxbtn {
+    background-color: #00cc74;
+    box-shadow: 0 5px 0 0 #00844b, 0 7px 0 0 black;
+}
+
+.greenboxbtn:hover {
+    background-color: #00b365;
+}
+
+.orangeboxbtn {
+    background-color: orange;
+    box-shadow: 0 5px 0 0 rgb(186, 121, 0), 0 7px 0 0 black;
+}
+
+.orangeboxbtn:hover {
+    background-color: rgb(217, 141, 1);
+}
+
+.grayboxbtn {
+    background-color: gray;
+    color: white;
+    box-shadow: 0 5px 0 0 rgb(31, 31, 31), 0 7px 0 0 black;
+}
+
+.grayboxbtn:hover {
+    background-color: rgb(91, 91, 91);
+}
+
+.whiteboxbtn {
+    background-color: white;
+    box-shadow: 0 5px 0 0 rgb(195, 195, 195), 0 7px 0 0 black;
+}
+
+.whiteboxbtn:hover {
+    background-color: rgb(228, 228, 228);
+}
+
 .box {
     display: block;
     border-radius: 15px;
@@ -137,22 +216,46 @@ button.bar {
     padding: 15px;
 }
 
+.buttoncolumn {
+    padding-top: 10px;
+    padding-bottom: 5px;
+}
+
+.menu_button {
+    width: 25%;
+    min-height: 25%;
+}
+
 .menu_button, .menu_button_bott_left, .menu_button_bott_right {
-    color: "white";
+    color: white;
     border-radius: 15px; 
     text-align: center;
     background-color: gray; 
+    box-shadow: 0 10px 0 0 rgb(31, 31, 31);
     margin-top: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.menu_button:active, .menu_button_bott_left:active, .menu_button_bott_right:active {
+    transform: translateY(10px);
+    box-shadow: none;
+}
+
+.greenboxbtn:active, .orangeboxbtn:active, .whiteboxbtn:active, .grayboxbtn:active {
+    transform: translateY(8px);
+    box-shadow: none;
 }
 
 .menu_button:hover, .menu_button_bott_left:hover, .menu_button_bott_right:hover {
-    background-color: #00cc74;
+    background-color: rgb(91, 91, 91);
+    transform: translateY(-3px);
     cursor: pointer;
 }
 
 .menu_button_bott_left, .menu_button_bott_right {
     bottom: 0;
+    min-height: 20px;
+    min-width: 20px;
 }
 
 .menu_button_bott_left {

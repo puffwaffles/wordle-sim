@@ -9,7 +9,17 @@
     <div class = "box">
         <div class = "middle">
             {% if win == "win" %}
-                <h1>You win!</h1>
+                {% if version == "solo" %}
+                    <h1>You win!</h1>
+                {% elif version == "agent only" %}
+                    <h1>The agent wins!</h1>
+                {% endif %}
+            {% elif win == "tie" %}
+                <h1>Both you and the agent guessed {{oldword}} in the same number of turns!</h1>
+            {% elif win == "both lose" %}
+                <h1>Both you and the agent lost! The word was {{oldword}}</h1>
+            {% elif win == "agent wins" %}
+                <h1>The agent wins! The word was {{oldword}}</h1>
             {% else %}
                 <h1>You lose! The word was {{oldword}}</h1>
             {% endif %}
@@ -31,34 +41,98 @@
                     <input type = "hidden" name = "tries" value = "5">
                     <button class = "menu_button_bott_left" type = "submit"><h1>Yes</h1></button>
                 </form>
+            {% elif version == "with agent" %}
+                <h1>Would you like to play another game with the agent?</h1>
+                <form action = "{% url 'dualgame' %}" method = "POST">
+                    {% csrf_token %}
+                    <input type = "hidden" name = "word" value = "{{word}}">
+                    <input type = "hidden" name = "guessedword" value = "">
+                    <input type = "hidden" name = "tries" value = "5">
+                    <button class = "menu_button_bott_left" type = "submit"><h1>Yes</h1></button>
+                </form>
             {% endif %}
             <form action = "{% url 'home' %}" method = "GET">
                 {% csrf_token %}<button class = "menu_button_bott_right" type = "submit"><h1>No</h1></button>
             </form>
         </div>
     </div>
-    <div class = "guessbox">
-        {% if version == "solo" %}
+    {% if version == "solo" %}
+        <div class = "guessbox">
             <h1>Your guesses: </h1>
-        {% elif version == "agent only" %}
+            {% for guessnum, guess in oldguesses.items %}    
+                <div class = "letterbox">
+                    {% for guesslet in guess %}
+                        {% if guesslet.1 == "green" %}
+                            <button class = "greenbox" disabled>{{guesslet.0}}</button>
+                        {% elif guesslet.1 == "orange" %}
+                            <button class = "orangebox" disabled>{{guesslet.0}}</button>
+                        {% elif guesslet.1 == "gray" %}
+                            <button class = "graybox" disabled>{{guesslet.0}}</button>
+                        {% else %}
+                            <button class = "whitebox" disabled>{{guesslet.0}}</button>
+                        {% endif %}
+                    {% endfor%}
+                </div>
+            {% endfor%}
+        </div>
+    {% elif version == "agent only" %}
+        <div class = "guessbox">
             <h1>The Agent's guesses: </h1>
-        {% endif %}
-        {% for guessnum, guess in oldguesses.items %}
-            <div class = "letterbox">
-                {% for guesslet in guess %}
-                    {% if guesslet.1 == "green" %}
-                        <button class = "greenbox" disabled>{{guesslet.0}}</button>
-                    {% elif guesslet.1 == "orange" %}
-                        <button class = "orangebox" disabled>{{guesslet.0}}</button>
-                    {% elif guesslet.1 == "gray" %}
-                        <button class = "graybox" disabled>{{guesslet.0}}</button>
-                    {% else %}
-                        <button class = "whitebox" disabled>{{guesslet.0}}</button>
-                    {% endif %}
+            {% for guessnum, guess in oldagentguesses.items %}
+                <div class = "letterbox">
+                    {% for guesslet in guess %}
+                        {% if guesslet.1 == "green" %}
+                            <button class = "greenbox" disabled>{{guesslet.0}}</button>
+                        {% elif guesslet.1 == "orange" %}
+                            <button class = "orangebox" disabled>{{guesslet.0}}</button>
+                        {% elif guesslet.1 == "gray" %}
+                            <button class = "graybox" disabled>{{guesslet.0}}</button>
+                        {% else %}
+                            <button class = "whitebox" disabled>{{guesslet.0}}</button>
+                        {% endif %}
+                    {% endfor%}
+                </div>
+            {% endfor%}
+        </div>
+    {% elif version == "with agent" %}
+        <div class = "guessboxsplit">
+            <div class = "guessbox">
+                <h1>Your guesses: </h1>
+                {% for guessnum, guess in oldguesses.items %}    
+                    <div class = "letterbox">
+                        {% for guesslet in guess %}
+                            {% if guesslet.1 == "green" %}
+                                <button class = "greenbox" disabled>{{guesslet.0}}</button>
+                            {% elif guesslet.1 == "orange" %}
+                                <button class = "orangebox" disabled>{{guesslet.0}}</button>
+                            {% elif guesslet.1 == "gray" %}
+                                <button class = "graybox" disabled>{{guesslet.0}}</button>
+                            {% else %}
+                                <button class = "whitebox" disabled>{{guesslet.0}}</button>
+                            {% endif %}
+                        {% endfor%}
+                    </div>
                 {% endfor%}
             </div>
-        {% endfor%}
-    </div>
-
+            <div class = "guessbox">
+                <h1>The Agent's guesses: </h1>
+                {% for guessnum, guess in oldagentguesses.items %}
+                    <div class = "letterbox">
+                        {% for guesslet in guess %}
+                            {% if guesslet.1 == "green" %}
+                                <button class = "greenbox" disabled>{{guesslet.0}}</button>
+                            {% elif guesslet.1 == "orange" %}
+                                <button class = "orangebox" disabled>{{guesslet.0}}</button>
+                            {% elif guesslet.1 == "gray" %}
+                                <button class = "graybox" disabled>{{guesslet.0}}</button>
+                            {% else %}
+                                <button class = "whitebox" disabled>{{guesslet.0}}</button>
+                            {% endif %}
+                        {% endfor%}
+                    </div>
+                {% endfor%}
+            </div>
+        </div>
+    {% endif %}
 </body>
 </html>

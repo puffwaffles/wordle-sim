@@ -51,6 +51,13 @@
                     {% endif %}
                 {% endfor%}
             </div>
+            {% for j in remaining %}
+                <div class = "currletterbox">
+                    {% for i in j %}
+                        <button class = "whitebox"  disabled>{{guess.0}}</button>
+                    {% endfor%}
+                </div>
+            {% endfor%}
             {% if error == "True" %}
                 <h1>{{guessedword}} is not a valid word</h1>
             {% endif %}
@@ -58,24 +65,28 @@
                 <div class = "letterbar">
                     {% for rows, rowvalues in letters.items %}
                         <div class = "letterbox">
-                            {% for letter, letvalues in rowvalues.items %}
-                                <form action = "{% url 'game' %}" method = "POST">
-                                {% csrf_token %}
-                                    <input type = "hidden" name = "word" value = "{{word}}">
-                                    <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
-                                    <input type = "hidden" name = "addletter" value = "{{letter}}">
-                                    <input type = "hidden" name = "tries" value = "{{tries}}">
-                                    {% if letvalues == "green" %}
-                                        <button type = "submit" class = "greenbox">{{letter}}</button>
-                                    {% elif letvalues == "gray" %}
-                                        <button type = "submit" class = "graybox">{{letter}}</button>
-                                    {% elif letvalues == "orange" %}
-                                        <button type = "submit" class = "orangebox">{{letter}}</button>
-                                    {% else %}
-                                        <button type = "submit" class = "whitebox">{{letter}}</button>
-                                    {% endif %}
-                                </form>
-                            {% endfor %}
+                            <div class = "leftletterbox">
+                                <div class = "letterrow">
+                                    {% for letter, letvalues in rowvalues.items %}
+                                        <form action = "{% url 'game' %}" method = "POST">
+                                        {% csrf_token %}
+                                            <input type = "hidden" name = "word" value = "{{word}}">
+                                            <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
+                                            <input type = "hidden" name = "addletter" value = "{{letter}}">
+                                            <input type = "hidden" name = "tries" value = "{{tries}}">
+                                            {% if letvalues == "green" %}
+                                                <button type = "submit" class = "greenboxbtn">{{letter}}</button>
+                                            {% elif letvalues == "gray" %}
+                                                <button type = "submit" class = "grayboxbtn">{{letter}}</button>
+                                            {% elif letvalues == "orange" %}
+                                                <button type = "submit" class = "orangeboxbtn">{{letter}}</button>
+                                            {% else %}
+                                                <button type = "submit" class = "whiteboxbtn">{{letter}}</button>
+                                            {% endif %}
+                                        </form>
+                                    {% endfor %}
+                                </div>
+                            </div>
                         </div>
                     {% endfor %}
                     
@@ -86,7 +97,7 @@
                             <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
                             <input type = "hidden" name = "back" value = "True">
                             <input type = "hidden" name = "tries" value = "{{tries}}">
-                            <button type= "submit" value="Enter"  class = "whitebox">Delete</button>
+                            <button type= "submit" value="Enter"  class = "whiteboxbtn">Delete</button>
                         </form>
                         <form action = "{% url 'game' %}" method = "POST">
                             {% csrf_token %}
@@ -94,7 +105,7 @@
                             <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
                             <input type = "hidden" name = "tries" value = "{{tries}}">
                             <input type = "hidden" name = "submit" value = "True">
-                            <button type= "submit" value="Enter" class = "whitebox">Enter</button>
+                            <button type= "submit" value="Enter" class = "whiteboxbtn">Enter</button>
                         </form>
                     </div>
                 </div>

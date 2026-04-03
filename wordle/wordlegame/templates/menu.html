@@ -8,21 +8,29 @@
 <body>
     <div class = "middle">
         <h1 style = "color: black" >Wordle</h1>
-        <form action = "{% url 'instructions' %}" method = "GET">
-            {% csrf_token %}<button class = "menu_button" type = "submit"><h1>Instructions</h1></button>
-        </form>
-        <form action = "{% url 'game' %}" method = "POST">
-            {% csrf_token %}
-            <input type = "hidden" name = "word" value = "{{word}}">
-            <input type = "hidden" name = "tries" value = "6">
-            <button class = "menu_button" type = "submit"><h1>Play Game</h1></button>
-        </form>
-        <form action = "{% url 'agentgame' %}" method = "POST">
-            {% csrf_token %}
-            <input type = "hidden" name = "word" value = "{{word}}">
-            <input type = "hidden" name = "tries" value = "6">
-            <button class = "menu_button" type = "submit"><h1>Let Agent Play Game</h1></button>
-        </form>
+        <div class = "buttoncolumn">
+            <form action = "{% url 'instructions' %}" method = "GET">
+                {% csrf_token %}<button class = "menu_button" type = "submit"><h1>Instructions</h1></button>
+            </form>
+            <form action = "{% url 'game' %}" method = "POST">
+                {% csrf_token %}
+                <input type = "hidden" name = "word" value = "{{word}}">
+                <input type = "hidden" name = "tries" value = "6">
+                <button class = "menu_button" type = "submit"><h1>Play Game</h1></button>
+            </form>
+            <form action = "{% url 'dualgame' %}" method = "POST">
+                {% csrf_token %}
+                <input type = "hidden" name = "word" value = "{{word}}">
+                <input type = "hidden" name = "tries" value = "6">
+                <button class = "menu_button" type = "submit"><h1>Play Game with Agent</h1></button>
+            </form>
+            <form action = "{% url 'agentgame' %}" method = "POST">
+                {% csrf_token %}
+                <input type = "hidden" name = "word" value = "{{word}}">
+                <input type = "hidden" name = "tries" value = "6">
+                <button class = "menu_button" type = "submit"><h1>Let Agent Play Game</h1></button>
+            </form>
+        </div>
     </div>
 </body>
 </html>

@@ -122,7 +122,8 @@ def getcolors(guess, word, letters):
             leftoverlet.append(word[i])
             #Add indices of letters from guess that did not match
             lettoverind.append(i)
-            newletters[getletter(guess[i])][guess[i]] = "gray"
+            if (newletters[getletter(guess[i])][guess[i]] != "green"):
+                newletters[getletter(guess[i])][guess[i]] = "gray"
 
     j = 0
     #Fill in orange spots in there are any. Orange if for letters in the wrong spot
