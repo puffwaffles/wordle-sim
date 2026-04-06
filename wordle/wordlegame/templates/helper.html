@@ -1,0 +1,256 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Helper Tool</title>
+    <link rel="stylesheet" href = "{% static 'css/game.css' %}">
+</head>
+<body>
+    <div class = "rulespecs">
+        <div class = "tablist">
+            {% if defaulttab == "Gray" %}
+            <button class = "tabs" onclick = "displayitemlist(event, 'Green')"  value = "Green">Green Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Orange')"  value = "Orange">Orange Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Blue')"  value = "Blue">Priority Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Red')"  value = "Red">Unique Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Gray')"  id = "defaulttab" value = "Gray">Gray Rules</button>
+            
+            {% elif defaulttab == "Orange" %}
+            <button class = "tabs" onclick = "displayitemlist(event, 'Green')"  value = "Green">Green Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Orange')"  id = "defaulttab"  value = "Orange">Orange Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Blue')"  value = "Blue">Priority Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Red')"  value = "Red">Unique Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Gray')" value = "Gray">Gray Rules</button>
+
+            {% elif defaulttab == "Blue" %}
+            <button class = "tabs" onclick = "displayitemlist(event, 'Green')"  value = "Green">Green Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Orange')"   value = "Orange">Orange Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Blue')" id = "defaulttab"  value = "Blue">Priority Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Red')"  value = "Red">Unique Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Gray')" value = "Gray">Gray Rules</button>
+            
+            {% elif defaulttab == "Red" %}
+            <button class = "tabs" onclick = "displayitemlist(event, 'Green')"  value = "Green">Green Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Orange')"   value = "Orange">Orange Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Blue')"  value = "Blue">Priority Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Red')"  id = "defaulttab" value = "Red">Unique Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Gray')" value = "Gray">Gray Rules</button>
+            
+            {% else %}
+            <button class = "tabs" onclick = "displayitemlist(event, 'Green')" id = "defaulttab"  value = "Green">Green Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Orange')" value = "Orange">Orange Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Blue')"  value = "Blue">Priority Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Red')"  value = "Red">Unique Rules</button>
+            <button class = "tabs" onclick = "displayitemlist(event, 'Gray')" value = "Gray">Gray Rules</button>
+            {% endif %}
+        </div>
+        <div id = "Green" class = "ruletab" value = "Green">
+            <form action = "{% url 'helpertool' %}" method = "POST">
+                {% csrf_token %}
+                <input type = "hidden" name = "add" value = "add">
+                <input type = "hidden" name = "defaulttab" value = "Green">
+                <input type = "hidden" name = "ruletype" value = "Green">
+                <p>Has letter <input type = "text" name = "letter" maxlength = "1" size = "4"> at position  <input type = "number" name = "number" min = "0" max = "4">
+                    <button type = "submit" class = "helper_button"> 
+                        <p>Submit Rule</p>
+                    </button>
+                </p>
+            </form> 
+            <form action = "{% url 'helpertool' %}" method = "POST">
+                <input type = "hidden" name = "reset" value = "reset">
+                {% csrf_token %}<button type = "submit"  class = "helper_button"><h4>Reset Rules</h4></button>
+            </form>  
+        </div>
+        <div id = "Orange" class = "ruletab" value = "Orange">
+            <form action = "{% url 'helpertool' %}" method = "POST">
+                {% csrf_token %}
+                <input type = "hidden" name = "add" value = "add">
+                <input type = "hidden" name = "defaulttab" value = "Orange">
+                <input type = "hidden" name = "ruletype" value = "Orange">
+                <p>Does not have letter <input type = "text" name = "letter" maxlength = "1" size = "4"> at position  <input type = "number" name = "number" min = "0" max = "4">
+                    <button type = "submit" class = "helper_button"> 
+                        <p>Submit Rule</p>
+                    </button>
+                </p>
+            </form> 
+            <form action = "{% url 'helpertool' %}" method = "POST">
+                <input type = "hidden" name = "reset" value = "reset">
+                {% csrf_token %}<button type = "submit" class = "helper_button"><h4>Reset Rules</h4></button>
+            </form>    
+        </div>
+        <div id = "Gray" class = "ruletab" value = "Gray">
+            <form action = "{% url 'helpertool' %}" method = "POST">
+                {% csrf_token %}
+                <input type = "hidden" name = "add" value = "add">
+                <input type = "hidden" name = "defaulttab" value = "Gray">
+                <input type = "hidden" name = "ruletype" value = "Gray">
+                <p>Only has <input type = "number" name = "number" min = "0" max = "4"> occurrence(s) of letter <input type = "text" name = "letter" maxlength = "1" size = "4">
+                    <button type = "submit" class = "helper_button"> 
+                        <p>Submit Rule</p>
+                    </button>
+                </p>
+            </form> 
+            <form action = "{% url 'helpertool' %}" method = "POST">
+                <input type = "hidden" name = "reset" value = "reset">
+                {% csrf_token %}<button type = "submit" class = "helper_button"><h4>Reset Rules</h4></button>
+            </form>    
+        </div>
+        <div id = "Blue" class = "ruletab" value = "Blue">
+            <form action = "{% url 'helpertool' %}" method = "POST">
+                {% csrf_token %}
+                <input type = "hidden" name = "add" value = "add">
+                <input type = "hidden" name = "defaulttab" value = "Blue">
+                <input type = "hidden" name = "ruletype" value = "Blue">
+                <p> Is a word in the possible answers list 
+                    <button type = "submit" class = "helper_button"> 
+                        <p>Submit Rule</p>
+                    </button>
+                </p>
+            </form> 
+            <form action = "{% url 'helpertool' %}" method = "POST">
+                <input type = "hidden" name = "reset" value = "reset">
+                {% csrf_token %}<button type = "submit" class = "helper_button"><h4>Reset Rules</h4></button>
+            </form>    
+        </div>
+        <div id = "Red" class = "ruletab" value = "Red">
+            <form action = "{% url 'helpertool' %}" method = "POST">
+                {% csrf_token %}
+                <input type = "hidden" name = "add" value = "add">
+                <input type = "hidden" name = "defaulttab" value = "Red">
+                <input type = "hidden" name = "ruletype" value = "Red">
+                <p>Has at least <input type = "number" name = "number" min = "0" max = "5"> unique letter(s)
+                    <button type = "submit" class = "helper_button"> 
+                        <p>Submit Rule</p>
+                    </button>
+                </p>
+            </form> 
+            <form action = "{% url 'helpertool' %}" method = "POST">
+                <input type = "hidden" name = "reset" value = "reset">
+                {% csrf_token %}<button type = "submit" class = "helper_button"><h4>Reset Rules</h4></button>
+            </form>    
+        </div>
+        <script src = "{% static 'js/script.js' %}"></script>
+        <script>document.getElementById("defaulttab").click();</script>
+    </div>
+    <div class = "addedrules">
+        {% if greenrulelist|length == 0 and orangerulelist|length == 0 and grayrulelist|length == 0 %}
+            <h4>No rules have been added yet</h4>
+        {% else %}
+                <h4>Green rules</h4>
+            <table class = "invisible">
+                <tr>
+                {% for letters, idxlist in greenrulelist.items %}
+                    {% for idx, rule in idxlist.items %}
+                    <td>
+                        <form action = "{% url 'helpertool' %}" method = "POST">
+                            <input type = "hidden" name = "defaulttab" value = "{{defaulttab}}">
+                            <input type = "hidden" name = "delete" value = "delete">
+                            <input type = "hidden" name = "ruletype" value = "Green">
+                            <input type = "hidden" name = "letter" value = "{{letters}}">
+                            <input type = "hidden" name = "number" value = "{{idx}}">
+                            {% csrf_token %}<div class = "ruletag" value = "Green"><button type = "submit" class = "greenrule"></button>{{ rule }}</div>
+                        </form>
+                    </td>
+                    {% if forloop.last %}
+                    </tr>
+                    {% elif forloop.counter|divisibleby:10 %}
+                        <tr></tr>
+                    {% endif %}
+                    {% endfor%}
+                {% endfor%}
+            </table>
+            <h4>Orange rules</h4>
+            <table class = "invisible">
+                <tr>
+                {% for letters, idxlist in orangerulelist.items %}
+                    {% for idx, rule in idxlist.items %}
+                        <td>
+                            <form action = "{% url 'helpertool' %}" method = "POST">
+                                <input type = "hidden" name = "defaulttab" value = "{{defaulttab}}">
+                                <input type = "hidden" name = "delete" value = "delete">
+                                <input type = "hidden" name = "ruletype" value = "Orange">
+                                <input type = "hidden" name = "letter" value = "{{letters}}">
+                                <input type = "hidden" name = "number" value = "{{idx}}">
+                                {% csrf_token %}<div class = "ruletag" value = "Orange"><button type = "submit" class = "orangerule"></button>{{ rule }}</div>
+                            </form>
+                        </td>
+                        {% if forloop.last %}
+                        </tr>
+                        {% elif forloop.counter|divisibleby:10 %}
+                            <tr></tr>
+                        {% endif %}
+                    {% endfor%}
+                {% endfor%}
+            </table>
+            <h4>Gray rules</h4>
+            <table class = "invisible">
+                <tr>
+                {% for letters, rule in grayrulelist.items %}
+                    <td>
+                        <form action = "{% url 'helpertool' %}" method = "POST">
+                            <input type = "hidden" name = "defaulttab" value = "{{defaulttab}}">
+                            <input type = "hidden" name = "delete" value = "delete">
+                            <input type = "hidden" name = "ruletype" value = "Gray">
+                            <input type = "hidden" name = "letter" value = "{{letters}}">
+                            <input type = "hidden" name = "number" value = "{{rule.1}}">
+                            {% csrf_token %}<div class = "ruletag" value = "Gray"><button class = "grayrule"></button>{{ rule.0 }}</div>
+                        </form>
+                    </td>
+                    {% if forloop.last %}
+                    </tr>
+                    {% elif forloop.counter|divisibleby:10 %}
+                        <tr></tr>
+                    {% endif %}
+                {% endfor%}
+            </table>
+            <h4>Priority rules</h4>
+            <table class = "invisible">
+                <tr>
+                {% for rule in priorityrulelist.items %}
+                    <td>
+                        <form action = "{% url 'helpertool' %}" method = "POST">
+                            <input type = "hidden" name = "defaulttab" value = "{{defaulttab}}">
+                            <input type = "hidden" name = "delete" value = "delete">
+                            <input type = "hidden" name = "ruletype" value = "Blue">
+                            {% csrf_token %}<div class = "ruletag" value = "Blue"><button class = "bluerule"></button>{{ rule }}</div>
+                        </form>
+                    </td>
+                {% endfor%}
+                </tr>
+            </table>
+            <h4>Unique rules</h4>
+            <table class = "invisible">
+                <tr>
+                {% for rule in uniquerulelist.items %}
+                    <td>
+                        <form action = "{% url 'helpertool' %}" method = "POST">
+                            <input type = "hidden" name = "defaulttab" value = "{{defaulttab}}">
+                            <input type = "hidden" name = "delete" value = "delete">
+                            <input type = "hidden" name = "ruletype" value = "Red">
+                            {% csrf_token %}<div class = "ruletag" value = "Red"><button class = "redrule"></button>{{ rule }}</div>
+                        </form>
+                    </td>
+                {% endfor%}
+                </tr>
+            </table>
+        {% endif %} 
+    </div>
+    <div class = "validwords">
+        {% if wordslist|length == 0 %}
+            <h4>There are no words that fulfill those conditions</h4>
+        {% endif %}
+        <h4>Words found:</h4>
+        <table class = "invisible">
+            <tr>
+            {% for word in wordslist %}
+                <td>{{ word }}</td>
+                {% if forloop.last %}
+                </tr>
+                {% elif forloop.counter|divisibleby:30 %}
+                    <tr></tr>
+                {% endif %}
+            {% endfor%}
+        </table>
+    </div>
+</body>
+</html>

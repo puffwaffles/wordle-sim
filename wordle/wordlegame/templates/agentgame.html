@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <button type = "button" class = "collapse"  onclick = "togglemenu()"></button>
+    <button type = "button" class = "collapse"  onclick = "togglemenu(event)"></button>
     <div class = "menucontent">
         <ul class = "menu">
             <form action = "{% url 'home' %}" method = "Get">
@@ -67,7 +67,12 @@
                 </div>
             {% endfor%}
             {% if error == "True" %}
-                <h1>{{guessedword}} is not a valid word</h1>
+                <div class = "popup">
+                    <h1>{{guessedword}} is not a valid word</h1>
+                    <button class = "closepopupbtn"  onclick = "closepopup(event)">Ok</button>
+                </div>
+
+                <script src = "{% static 'js/script.js' %}"></script>
             {% endif %}
             <div class = "botbar">
                 <div class = "letterbar">    

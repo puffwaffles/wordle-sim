@@ -274,7 +274,7 @@ def game(request):
         request.session['win'] = "lose"
         return results(request)
     #We submitted a word -> use get
-    elif (submit == "True"):
+    elif (submit == "True" and not error):
         return redirect('game')
     #We did not submit a word yet
     else:
@@ -417,7 +417,7 @@ def dualplaygame(request):
         request.session['win'] = "both lose"
         return results(request)
     #We submitted a word -> use get
-    elif (submit == "True"):
+    elif (submit == "True" and not error):
         return redirect('dualgame')
     else:
         #Unset submit so that we don't accidentally submit again if we refresh
