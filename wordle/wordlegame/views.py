@@ -1,13 +1,23 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from . import funcs
 from . import agentinteract
+import random
 from django.views.decorators.csrf import csrf_protect
 
 # Create your views here.
 def home(request):
+    wordleword = "wordle"
+    wordlelist = []
+    colors = ['green', 'orange', 'gray']
+    color = random.choices(colors, weights = [0.2, 0.3, 0.5], k = 6)
+    for i in range(len(wordleword)):
+        wordlelist.append([wordleword[i], color[i]])
+
     word = funcs.pickword()
     request.session['word'] = word
+    tries = 6
+    request.session['tries'] = tries
     newletter = funcs.getnewletter()
     request.session['letters'] = newletter
     request.session['guesses'] = {}
@@ -18,7 +28,7 @@ def home(request):
     request.session['state'] = agentenv.getcurrentstate()
     request.session['colordict'] = agentenv.getcolorlistsdicts()
 
-    context = {"word": word}
+    context = {"word": word, "tries": tries, "wordlelist": wordlelist}
     return render(request, 'menu.html', context)
 
 @csrf_protect
@@ -31,6 +41,7 @@ def instructions(request):
         submit = request.POST.get("submit")
         guessedword = request.POST.get("guessedword")
         tries = request.POST.get("tries")
+        origin = request.POST.get("origin")
         
         context = {
             "word": word,
@@ -38,10 +49,158 @@ def instructions(request):
             "guesses": guesses,
             "submit": submit,
             "guessedword": guessedword,
-            "tries": tries
+            "tries": tries,
+            "origin": origin
         }
         
     return render(request, 'instructions.html', context)
+
+#Maintains page for helper tool for coming up with words
+@csrf_protect
+def helpertool(request):
+    ruletype = ""
+    reset = ""
+    deleterule = ""
+    add = ""
+    letter = ""
+    number = 0
+    wordlist = []
+    defaulttab = "Green"
+
+    #Init greenrules, orangerules, and grayrules as empty list at the same time
+    if ('greenrules' not in request.session or 'greenrulelist' not in request.session):
+        request.session['greenrules'] = {}
+        request.session['greenrulelist'] = {}
+    if ('orangerules' not in request.session or 'orangerulelist' not in request.session):
+        request.session['orangerules'] = {}
+        request.session['orangerulelist'] = {}
+    if ('grayrules' not in request.session or 'grayrulelist' not in request.session):
+        request.session['grayrules'] = {}
+        request.session['grayrulelist'] = {}
+    if ('priorityrules' not in request.session or 'priorityrulelist' not in request.session):
+        request.session['priorityrules'] = False
+        request.session['priorityrulelist'] = []
+    if ('uniquerules' not in request.session or 'uniquerulelist' not in request.session):
+        request.session['uniquerules'] = 0
+        request.session['uniquerulelist'] = []
+
+
+    greenrules = request.session['greenrules']#each entry is letter -> word index list
+    orangerules = request.session['orangerules']#each entry is letter -> wordindex list
+    grayrules = request.session['grayrules']#each entry is letter -> maxoccurrences
+    priorityrules = request.session['priorityrules']#entry is either false or negative
+    uniquerules = request.session['uniquerules']#entry is an integer
+    greenrulelist = request.session['greenrulelist']#each entry is (letter, wordindex) -> rule as string
+    orangerulelist = request.session['orangerulelist']#each entry is (letter, wordindex) -> rule as string
+    grayrulelist = request.session['grayrulelist']#each entry is letter -> (letter, maxoccurrences) -> rule as string
+    priorityrulelist = request.session['priorityrulelist']#each entry is rule as string (Only has one max)
+    uniquerulelist = request.session['uniquerulelist']#each entry is rule as string (Only has one max)
+
+    if request.method == 'POST':
+        reset = request.POST.get("reset")
+        add = request.POST.get("add")
+        deleterule = request.POST.get("delete")
+        ruletype = request.POST.get("ruletype")
+        letter = request.POST.get("letter")
+        number = request.POST.get("number")
+        if (request.POST.get("defaulttab") != None):
+            defaulttab = request.POST.get("defaulttab")
+        if (number != None):
+            number = int(number)
+
+        #Delete all rules
+        if (reset == 'reset'):
+            greenrules = {}
+            orangerules = {}
+            grayrules = {}
+            greenrulelist = {}
+            orangerulelist = {}
+            grayrulelist = {}
+        #Delete a rule based on index
+        elif (deleterule == "delete"):
+            match ruletype:
+                case "Green":
+                    if (letter in greenrules.keys()):
+                        greenrules[letter].remove(number)
+                    if (letter in greenrulelist.keys()):
+                        greenrulelist[letter].pop(str(number))
+                    if (len(greenrules[letter]) == 0):
+                        greenrules.pop(letter)
+                        greenrulelist.pop(letter)
+                case "Orange":
+                    if (letter in orangerules.keys()):
+                        orangerules[letter].remove(number)
+                    if (letter in orangerulelist.keys()):
+                        orangerulelist[letter].pop(str(number))
+                    if (len(orangerules[letter]) == 0):
+                        orangerules.pop(letter)
+                        orangerulelist.pop(letter)
+                case "Blue":
+                    priorityrules = False
+                    if (len(priorityrulelist) > 0):
+                        priorityrulelist.pop()
+                case "Red":
+                    uniquerules = 0
+                    if (len(uniquerulelist) > 0):
+                        uniquerulelist.pop()
+                case _:
+                    grayrules.pop(letter)
+                    grayrulelist.pop(letter)
+        #Add rule type
+        elif(add == 'add'):
+            match ruletype:
+                case "Green":
+                    if (letter not in greenrules.keys()):
+                        greenrules[letter] = []
+                        greenrulelist[letter] = {}
+                    if (number not in greenrules[letter]):
+                        greenrules[letter].append(number)
+                    if (str(number) not in greenrulelist[letter] and int(number) not in greenrulelist[letter]):
+                        greenrulelist[letter][number] = "Has letter " + letter + " at position " + str(number)
+                case "Orange":
+                    if (letter not in orangerules.keys()):
+                        orangerules[letter] = []
+                        orangerulelist[letter] = {}
+                    if (number not in orangerules[letter]):
+                        orangerules[letter].append(number)
+                    if (str(number) not in orangerulelist[letter] and int(number) not in orangerulelist[letter]):
+                        orangerulelist[letter][number] = "Has letter " + letter + ", but not at position " + str(number)
+                case "Blue":
+                    priorityrules = True
+                    priorityrulelist = ["Is a word in the possible answers list"]
+                case "Red":
+                    uniquerules = int(number)
+                    uniquerulelist = ["Has at least " + str(number) + " unique letter(s)"]
+                case _:
+                    grayrules[letter] = number
+                    grayrulelist[letter] = ["Only has " + str(number) + " instance(s) of " + letter, number]
+
+    #Retrieve valid words
+    wordslist = funcs.getvalidwordslist(greenrules, orangerules, grayrules, uniquerules, priorityrules)
+
+    #Update rules:
+    request.session['greenrules'] = greenrules
+    request.session['orangerules'] = orangerules
+    request.session['grayrules'] = grayrules
+    request.session['greenrulelist'] = greenrulelist
+    request.session['orangerulelist'] = orangerulelist
+    request.session['grayrulelist'] = grayrulelist
+    request.session['priorityrules'] = priorityrules
+    request.session['uniquerules'] = uniquerules
+    request.session['priorityrulelist'] = priorityrulelist
+    request.session['uniquerulelist'] = uniquerulelist
+
+    context = {
+        "defaulttab": defaulttab,
+        "greenrulelist": greenrulelist,
+        "orangerulelist": orangerulelist,
+        "grayrulelist": grayrulelist,
+        "uniquerulelist": uniquerulelist,
+        "priorityrulelist": priorityrulelist,
+        "wordslist": wordslist
+    }
+    return render(request, 'helper.html', context)
+
 
 # Plays game
 @csrf_protect
@@ -52,13 +211,13 @@ def game(request):
     guesses = request.session['guesses']
     currguess = funcs.initcurrguess()
     guessedword = ""
-    tries = 6
+    tries = request.session['tries']
     error = "False"
     submit = ""
     letter = ""
     back = ""
     checkword = ""
-    print(word)
+    origin = "game"
 
     if request.method == 'POST': 
         submit = request.POST.get("submit")
@@ -66,6 +225,7 @@ def game(request):
         letter = request.POST.get("addletter")
         back = request.POST.get("back")
         tries = request.POST.get("tries")
+        origin = request.POST.get("origin")
         
         #We haven't entered any words in yet
         if (guessedword != None and len(guessedword) > 0):
@@ -101,17 +261,25 @@ def game(request):
             if (tries > 0):
                 guessedword = ""
                 currguess = funcs.initcurrguess()
-    print(f"tries = {tries}")
+            request.session['tries'] = tries
     remaining = [[0 for i in range(5) ] for j in range(int(tries) - 1)]
+    #We won -> end game
     if ((submit == "True") and (word == checkword.lower())):
         request.session['guesses'] = guesses
         request.session['win'] = "win"
         return results(request)
+    #We lost -> end game
     elif(tries == 0):
         request.session['guesses'] = guesses
         request.session['win'] = "lose"
         return results(request)
+    #We submitted a word -> use get
+    elif (submit == "True"):
+        return redirect('game')
+    #We did not submit a word yet
     else:
+        #Unset submit so that we don't accidentally submit again if we refresh
+        submit = False
         request.session['guesses'] = guesses
         context = {
             "word": word, 
@@ -124,7 +292,8 @@ def game(request):
             "letters": letters,
             "back": back,
             "submit": submit,
-            "letter": letter
+            "letter": letter,
+            "origin": origin
         }
         
         return render(request, 'game.html', context)
@@ -138,13 +307,15 @@ def dualplaygame(request):
     guesses = request.session['guesses']
     currguess = funcs.initcurrguess()
     guessedword = ""
-    tries = 6
+    tries = request.session['tries']
     error = "False"
     submit = ""
     letter = ""
     back = ""
     checkword = ""
-    print(word)
+
+
+    origin = "dualplaygame"
 
     agentguessedword = ""
     agentcheckedword = ""
@@ -165,6 +336,7 @@ def dualplaygame(request):
         letter = request.POST.get("addletter")
         back = request.POST.get("back")
         tries = request.POST.get("tries")
+        origin = request.POST.get("origin")
         
         #We haven't entered any words in yet
         if (guessedword != None and len(guessedword) > 0):
@@ -213,8 +385,8 @@ def dualplaygame(request):
             guesses[7 - tries] = values["colorlist"]
             request.session['letters'] = values['letters']
 
-
             tries -= 1
+            request.session['tries'] = tries
             if (tries > 0):
                 guessedword = ""
                 currguess = funcs.initcurrguess()
@@ -244,7 +416,12 @@ def dualplaygame(request):
     elif(tries == 0):
         request.session['win'] = "both lose"
         return results(request)
+    #We submitted a word -> use get
+    elif (submit == "True"):
+        return redirect('dualgame')
     else:
+        #Unset submit so that we don't accidentally submit again if we refresh
+        submit = False
         request.session['guesses'] = guesses
         request.session['agentguesses'] = agentguesses
         context = {
@@ -262,7 +439,8 @@ def dualplaygame(request):
             "agentletters": agentletters,
             "back": back,
             "submit": submit,
-            "letter": letter
+            "letter": letter,
+            "origin": origin
         }
         
         return render(request, 'dualgame.html', context)
@@ -279,11 +457,13 @@ def agentplaygame(request):
     colordict = request.session['colordict']
     currguess = funcs.initcurrguess()
     guessedword = ""
-    tries = 6
+    tries = request.session['tries']
     submit = ""
     letter = ""
     back = ""
     checkword = ""
+
+    origin = "agentplaygame"
 
     #Init agentenv with stored state and colordict
     agentenv.setcurrentstate(state)
@@ -294,9 +474,10 @@ def agentplaygame(request):
         back = request.POST.get("back")
         tries = request.POST.get("tries")
         currentstate = agentenv.getcurrentstate()
+        origin = request.POST.get("origin")
 
         #We pressed the submit button -> agent will finally make a move
-        if (submit != None and submit != ""):
+        if (submit == "True"):
             #Have the agent make a move
             guessedword = agentenv.getagentmove()
             checkword = guessedword
@@ -312,6 +493,7 @@ def agentplaygame(request):
             request.session['colordict'] = agentenv.getcolorlistsdicts()
 
             tries -= 1
+            request.session['tries'] = tries
             if (tries > 0):
                 guessedword = ""
                 currguess = funcs.initcurrguess()
@@ -331,7 +513,12 @@ def agentplaygame(request):
         request.session['win'] = "lose"
         request.session['agentguesses'] = guesses
         return results(request)
+    #We submitted a word -> use get
+    elif (submit == "True"):
+        return redirect('agentgame')
     else:
+        #Unset submit so that we don't accidentally submit again if we refresh
+        submit = False
         request.session['agentguesses'] = guesses
         context = {
             "word": word, 
@@ -343,6 +530,7 @@ def agentplaygame(request):
             "letters": letters,
             "back": back,
             "submit": submit,
+            "origin": origin
         }
         
         return render(request, 'agentgame.html', context)

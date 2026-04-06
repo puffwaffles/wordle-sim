@@ -3,7 +3,7 @@
 <html>
 <head>
     <title>Instructions</title>
-    <link rel="stylesheet" href = "{% static 'game.css' %}">
+    <link rel="stylesheet" href = "{% static 'css/game.css' %}">
 </head>
 <body>
     <div class = "box">
@@ -18,18 +18,79 @@
                     <li>Green denotes that the letter is in the right position</li>
                 </ul>
             </li>
+            <li>If you get stuck, you can always use the helper tool to help find words to enter.</li>
+                <ul>
+                    <li>Green rules provide words with a matching letter at a given position (index starting at 0).</li>
+                    <li>Orange rules provide words with a matching letter that is not at a given position (index starting at 0).</li>
+                    <li>Gray rules provide words that have the same amount of occurrences for a given letter and frequency.</li>
+                    <li>The priority rule filters out words that can not be used as an answer.</li>
+                    <li>The unique rule provides all words with at least as many unique letters as the given amount.</li>
+                    <li>Individual rules can be removed by pressing the x on the rule's tab. All rules can be removed by pressing the reset button</li>
+                </ul>
         </ol>
+        {% if origin == "dualplaygame" %}
+            <h4>Playing with Agent Mode</h4>
+            <ol>
+                <li>In this game mode, the agent will be playing alongside the player.</li>
+                <li>The agent will only make its move after the player enters a valid word</li>
+                <li>The player will not see the letters the agent use. Also the agent has no knowledge of what the player chooses.</li>
+                <li>The player wins only if they find the winning word on a turn before the agent finds the word.</li>
+                <li>If the player finds the word on the same turn as the agent or if both run out of turns, the player and agent will be tied.</li>
+                <li>Otherwise, the agent wins if it finds the word first.</li>
+            </ol>
+        {% elif origin == "agentplaygame" %}
+            <h4>Agent Only Mode</h4>
+            <ol>
+                <li>In this game mode, the agent will be the one deciding which words to use.</li>
+                <li>To make the agent choose a word, press the enter button.</li>
+            </ol>
+        {% endif %}
         <div class = "middle">
-            <form action = "{% url 'game' %}" method = "POST">
-                {% csrf_token %}
-                <input type = "hidden" name = "word" value = "{{word}}">
-                <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
-                <input type = "hidden" name = "addletter" value = "{{letter}}">
-                <input type = "hidden" name = "tries" value = "{{tries}}">
-                <input type = "hidden" name = "back" value = "{{back}}">
-                <input type = "hidden" name = "submit" value = "{{submit}}">
-                <button class = "menu_button_bott_left" type = "submit"><h1>Play Game</h1></button>
-            </form>
+            {% if origin != "menu" %}
+                {% if origin == "game" %}
+                    <form action = "{% url 'game' %}" method = "POST">
+                        {% csrf_token %}
+                        <input type = "hidden" name = "word" value = "{{word}}">
+                        <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
+                        <input type = "hidden" name = "addletter" value = "{{letter}}">
+                        <input type = "hidden" name = "tries" value = "{{tries}}">
+                        <input type = "hidden" name = "back" value = "{{back}}">
+                        <input type = "hidden" name = "submit" value = "{{submit}}">
+                        <input type = "hidden" name = "origin" value = "game">
+                        <button class = "menu_button_bott_left" type = "submit">
+                            <h1>Back To Game</h1>    
+                        </button>
+                    </form>
+                {% elif origin == "dualplaygame" %}
+                    <form action = "{% url 'dualgame' %}" method = "POST">
+                        {% csrf_token %}
+                        <input type = "hidden" name = "word" value = "{{word}}">
+                        <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
+                        <input type = "hidden" name = "addletter" value = "{{letter}}">
+                        <input type = "hidden" name = "tries" value = "{{tries}}">
+                        <input type = "hidden" name = "back" value = "{{back}}">
+                        <input type = "hidden" name = "submit" value = "{{submit}}">
+                        <input type = "hidden" name = "origin" value = "dualplaygame">
+                        <button class = "menu_button_bott_left" type = "submit">
+                            <h1>Back To Game</h1>    
+                        </button>
+                    </form>
+                {% elif origin == "agentplaygame" %}
+                    <form action = "{% url 'agentgame' %}" method = "POST">
+                    {% csrf_token %}
+                        <input type = "hidden" name = "word" value = "{{word}}">
+                        <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
+                        <input type = "hidden" name = "addletter" value = "{{letter}}">
+                        <input type = "hidden" name = "tries" value = "{{tries}}">
+                        <input type = "hidden" name = "back" value = "{{back}}">
+                        <input type = "hidden" name = "submit" value = "{{submit}}">
+                        <input type = "hidden" name = "origin" value = "agentplaygame">
+                        <button class = "menu_button_bott_left" type = "submit">
+                            <h1>Back To Game</h1>    
+                        </button>
+                    </form>
+                {% endif %}
+            {% endif %}
             <form action = "{% url 'home' %}" method = "GET">
                 {% csrf_token %}<button class = "menu_button_bott_right" type = "submit"><h1>Back to Menu</h1></button>
             </form>   

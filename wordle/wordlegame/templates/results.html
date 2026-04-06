@@ -2,14 +2,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Before Starting</title>
-    <link rel="stylesheet" href = "{% static 'game.css' %}">
+    <title>Results</title>
+    <link rel="stylesheet" href = "{% static 'css/game.css' %}">
 </head>
 <body>
     <div class = "box">
         <div class = "middle">
             {% if win == "win" %}
-                {% if version == "solo" %}
+                {% if version == "solo" or version == "with agent" %}
                     <h1>You win!</h1>
                 {% elif version == "agent only" %}
                     <h1>The agent wins!</h1>
@@ -29,7 +29,7 @@
                     {% csrf_token %}
                     <input type = "hidden" name = "word" value = "{{word}}">
                     <input type = "hidden" name = "guessedword" value = "">
-                    <input type = "hidden" name = "tries" value = "5">
+                    <input type = "hidden" name = "tries" value = "6">
                     <button class = "menu_button_bott_left" type = "submit"><h1>Yes</h1></button>
                 </form>
             {% elif version == "agent only" %}
@@ -38,7 +38,7 @@
                     {% csrf_token %}
                     <input type = "hidden" name = "word" value = "{{word}}">
                     <input type = "hidden" name = "guessedword" value = "">
-                    <input type = "hidden" name = "tries" value = "5">
+                    <input type = "hidden" name = "tries" value = "6">
                     <button class = "menu_button_bott_left" type = "submit"><h1>Yes</h1></button>
                 </form>
             {% elif version == "with agent" %}
@@ -47,7 +47,7 @@
                     {% csrf_token %}
                     <input type = "hidden" name = "word" value = "{{word}}">
                     <input type = "hidden" name = "guessedword" value = "">
-                    <input type = "hidden" name = "tries" value = "5">
+                    <input type = "hidden" name = "tries" value = "6">
                     <button class = "menu_button_bott_left" type = "submit"><h1>Yes</h1></button>
                 </form>
             {% endif %}

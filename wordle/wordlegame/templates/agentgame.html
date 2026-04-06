@@ -2,25 +2,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Wordle Game</title>
-    <link rel="stylesheet" href = "{% static 'game.css' %}">
+    <title>Agent Game</title>
+    <link rel="stylesheet" href = "{% static 'css/game.css' %}">
 </head>
 
 <body>
-    <ul class = "menu">
-        <form action = "{% url 'home' %}" method = "Get">
-            {% csrf_token %}<button class = "bar" type = "submit"><h4>Back To Home Menu</h4></button>
-        </form>
-        <form action = "{% url 'instructions' %}" method = "POST">
-            <input type = "hidden" name = "word" value = "{{word}}">
-            <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
-            <input type = "hidden" name = "addletter" value = "{{letter}}">
-            <input type = "hidden" name = "tries" value = "{{tries}}">
-            <input type = "hidden" name = "back" value = "{{back}}">
-            <input type = "hidden" name = "submit" value = "{{submit}}">
-            {% csrf_token %}<button class = "bar" type = "submit"><h4>Instructions</h4></button>
-        </form>
-    </ul>
+    <button type = "button" class = "collapse"  onclick = "togglemenu()"></button>
+    <div class = "menucontent">
+        <ul class = "menu">
+            <form action = "{% url 'home' %}" method = "Get">
+                {% csrf_token %}<button class = "bar" type = "submit"><h4>Back To Home Menu</h4></button>
+            </form>
+            <form action = "{% url 'instructions' %}" method = "POST">
+                <input type = "hidden" name = "word" value = "{{word}}">
+                <input type = "hidden" name = "guessedword" value = "{{guessedword}}">
+                <input type = "hidden" name = "addletter" value = "{{letter}}">
+                <input type = "hidden" name = "tries" value = "{{tries}}">
+                <input type = "hidden" name = "back" value = "{{back}}">
+                <input type = "hidden" name = "origin" value = "agentplaygame">
+                {% csrf_token %}<button class = "bar" type = "submit"><h4>Instructions</h4></button>
+            </form>
+            <form target = "_blank" action = "{% url 'helpertool' %}" method = "POST">
+                <input type = "hidden" name = "defaulttab" value = "Green">
+                {% csrf_token %}<button class = "bar" type = "submit"><h4>Use Helper Tool</h4></button>
+            </form>
+        </ul>
+    </div>
+    <script src = "{% static 'js/script.js' %}"></script>
     <div class = "gamebox">
         <div class = "middle">
             {% for guessnum, guess in guesses.items %}

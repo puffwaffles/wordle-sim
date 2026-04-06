@@ -3,14 +3,30 @@
 <html>
 <head>
     <title>Main Menu</title>
-    <link rel="stylesheet" href = "{% static 'game.css' %}">
+    <link rel="stylesheet" href = "{% static 'css/game.css' %}">
 </head>
 <body>
     <div class = "middle">
-        <h1 style = "color: black" >Wordle</h1>
+        <div class = "wordlebox">
+            {% for letter in wordlelist %}
+                {% if letter.1 == "green" %}
+                    <button class = "greenboxbtn" disabled>{{letter.0}}</button>
+                {% elif letter.1 == "orange" %}
+                    <button class = "orangeboxbtn" disabled>{{letter.0}}</button>
+                {% elif letter.1 == "gray" %}
+                    <button class = "grayboxbtn" disabled>{{letter.0}}</button>
+                {% else %}
+                    <button class = "whiteboxbtn" disabled>{{letter.0}}</button>
+                {% endif %}
+            {% endfor %}
+        </div>
         <div class = "buttoncolumn">
-            <form action = "{% url 'instructions' %}" method = "GET">
-                {% csrf_token %}<button class = "menu_button" type = "submit"><h1>Instructions</h1></button>
+            <form action = "{% url 'instructions' %}" method = "POST">
+                {% csrf_token %}
+                <input type = "hidden" name = "origin" value = "menu">
+                <input type = "hidden" name = "word" value = "{{word}}">
+                <input type = "hidden" name = "tries" value = "{{tries}}">
+                <button class = "menu_button" type = "submit"><h1>Instructions</h1></button>
             </form>
             <form action = "{% url 'game' %}" method = "POST">
                 {% csrf_token %}

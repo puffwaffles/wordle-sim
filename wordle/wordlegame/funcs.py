@@ -140,3 +140,76 @@ def getcolors(guess, word, letters):
     values["colorlist"] = colorlist 
     values['letters'] = newletters   
     return values
+
+#Returns list of words that matches rules
+def getvalidwordslist(greenrules, orangerules, grayrules, uniquerules, priorityrules):
+    #File for words
+    wordfile = getjsonpath("words")
+    worddict = {}
+    
+    #Grab dictionary of words from json file
+    with open(wordfile, "r") as file:
+        worddict = json.load(file)
+
+    wordslist = []
+    
+    #Iterate through word list to determine words that follow rules
+    for words in worddict.keys():
+        valid = True
+
+        #Check priority 
+        if (priorityrules == True and worddict[words] != 1):
+            valid = False
+
+        #Check unique rule
+        if (valid == True):
+            unique = []
+            copies = 0
+            for i in range(len(words)):
+                if (words[i] not in unique):
+                    unique.append(words[i])
+                else:
+                    copies += 1
+                if (copies > len(words) - uniquerules):
+                    valid = False
+                    break
+
+        #Check green rules
+        if (valid == True):
+            for key in greenrules.keys():
+                if (words.count(key) < len(greenrules[key])):
+                    valid = False
+                    break
+                for i2 in range(len(greenrules[key])):
+                    if (words[greenrules[key][i2]] != key):
+                        valid = False
+                        break
+                if (valid == False):
+                    break
+        
+        #Check orange rules
+        if (valid == True):
+            for key in orangerules.keys():
+                if (words.count(key) == 0):
+                    valid = False
+                    break
+                for j2 in range(len(orangerules[key])):
+                    if (words[orangerules[key][j2]] == key):
+                        valid = False
+                        break
+                if (valid == False):
+                    break
+
+
+        #Check gray rules
+        if (valid == True):
+            for key in grayrules.keys():
+                if (words.count(key) != grayrules[key]):
+                    valid = False
+                    break
+
+        if (valid == True):
+            wordslist.append(words)
+
+    return wordslist
+
